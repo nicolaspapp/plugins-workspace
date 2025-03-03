@@ -65,7 +65,13 @@ impl CookieStoreMutex {
     }
 
     pub fn load<R: std::io::BufRead>(reader: R) -> cookie_store::Result<CookieStoreMutex> {
-        cookie_store::serde::load(reader, |c| serde_json::from_str(c)).map(CookieStoreMutex::new)
+        cookie_store::serde::load(reader, |c: &str| {
+            if c.trim().is_empty() {
+                serde_json::from_str("{}")
+            } else {
+                serde_json::from_str(c)
+            }
+        }).map(CookieStoreMutex::new)
     }
 
     pub fn save<W: std::io::Write>(&self, writer: &mut W) -> cookie_store::Result<()> {
