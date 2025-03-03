@@ -48,7 +48,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
 
                 if !file_exists {
                     use std::io::Write;
-                    file.write_all(b"{}")?;
+                    file.write_all(b"[]")?;
                 }
 
                 let reader = BufReader::new(file);
