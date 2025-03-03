@@ -39,11 +39,17 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                 std::fs::create_dir_all(&cache_dir)?;
 
                 let path = cache_dir.join("Cookies");
-                let file = File::options()
+                let file_exists = path.exists();
+                let mut file = File::options()
                     .create(true)
                     .append(true)
                     .read(true)
                     .open(&path)?;
+
+                if !file_exists {
+                    use std::io::Write;
+                    file.write_all(b"{}")?;
+                }
 
                 let reader = BufReader::new(file);
                 let store = CookieStoreMutex::load(reader).map_err(|e| e.to_string())?;
