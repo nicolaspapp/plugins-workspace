@@ -47,6 +47,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                     .open(&path)?;
 
                 if !file_exists {
+                    // Initialize the file with an empty array
                     use std::io::Write;
                     file.write_all(b"[]")?;
                 }
